@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 using HearthMirror;
 
 namespace daily80
@@ -23,12 +24,19 @@ namespace daily80
 			CallingConvention = CallingConvention.StdCall)]
 		private static extern int AllocConsole();
 
-		public frmMain()
-		{
-			InitializeComponent();
-			AllocConsole();
-			//Console.WriteLine(Reflection.GetBattleTag().Name + "#" + Reflection.GetBattleTag().Number);
-		}
+        /*
+        BOOLEANS
+        */
+        bool canWriteToXML = true; // it is for good work between load btn and timer saver
+
+        ////////////////////////////
+
+	    public frmMain()
+	    {
+	        InitializeComponent();
+	        AllocConsole();
+	        //Console.WriteLine(Reflection.GetBattleTag().Name + "#" + Reflection.GetBattleTag().Number);
+	    }
 
 	    private void btnStartCreateAccs_Click(object sender, EventArgs e)
 	    {
@@ -79,15 +87,86 @@ namespace daily80
             openFileDialog.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
             if (openFileDialog.ShowDialog() == DialogResult.Cancel)
                 return;
-            // получаем выбранный файл
+            // getting selected file
             string filename = openFileDialog.FileName;
-            // читаем файл в строку
-            string fileText = System.IO.File.ReadAllText(filename);
 
             Console.WriteLine("File opened!");
+
+            StreamReader fileRead = new StreamReader(filename);
+            // count of uniq accs added to data
+            int count = 0;
+            while (!fileRead.EndOfStream)
+            {
+                string acc = fileRead.ReadLine();
+
+                addToDataGrid(acc);
+                count++;
+            }
+            // perform work to this thread
+            canWriteToXML = false;
+            if(!canWriteToXML)
+                addToXml();
+            canWriteToXML = true;
+            // closing opened file
+            fileRead.Close();
+            Console.WriteLine("Added " + count + " new accs");
         }
 
-        private void timerData_Tick(object sender, EventArgs e)
+	    private void addToDataGrid(string acc)
+	    {
+	        bool isInData = false;
+	        for (int i = 0; i < dataGridView.RowCount; i++)
+	        {
+	            if (dataGridView.Rows[i].Cells[3].ToString() == acc)
+	            {
+	                isInData = true;
+	            }
+	        }
+	        if (!isInData)
+	        {
+	            DataGridViewRow row = (DataGridViewRow) dataGridView.Rows[0].Clone();
+	            row.Cells[0].Value = "";
+	            row.Cells[1].Value = "";
+	            row.Cells[2].Value = acc;
+	            row.Cells[3].Value = "false";
+	            dataGridView.Rows.Add(row);
+	        }
+	    }
+
+	    private void addToXml()
+	    {
+	        Console.WriteLine("Saving data!");
+	        try
+	        {
+	            DataSet ds = new DataSet(); // создаем пока что пустой кэш данных
+	            ds.DataSetName = "ACCOUNTS";
+	            DataTable dt = new DataTable(); // создаем пока что пустую таблицу данных
+	            dt.TableName = "Account"; // название таблицы
+	            dt.Columns.Add("Battle_TAG"); // название колонок
+	            dt.Columns.Add("Lvl");
+	            dt.Columns.Add("Email");
+	            dt.Columns.Add("daily80");
+	            ds.Tables.Add(dt); //в ds создается таблица, с названием и колонками, созданными выше
+
+	            foreach (DataGridViewRow r in dataGridView.Rows) // пока в dataGridView1 есть строки
+	            {
+	                DataRow row = ds.Tables["Account"].NewRow(); // создаем новую строку в таблице, занесенной в ds
+	                row["Battle_TAG"] = r.Cells[0].Value;  //в столбец этой строки заносим данные из первого столбца dataGridView
+	                row["Lvl"] = r.Cells[1].Value;
+	                row["Email"] = r.Cells[2].Value;
+	                row["daily80"] = r.Cells[3].Value;
+	                ds.Tables["Account"].Rows.Add(row); //добавление всей этой строки в таблицу ds.
+	            }
+	            ds.WriteXml("accounts.xml");
+	            Console.WriteLine("XML file was successfully saved.");
+	        }
+	        catch
+	        {
+	            Console.WriteLine("Cant save XML file.");
+	        }
+        }
+
+	    private void timerData_Tick(object sender, EventArgs e)
         {
             Console.WriteLine("Saving data!");
             try
@@ -118,5 +197,49 @@ namespace daily80
                 Console.WriteLine("Cant save XML file.");
             }
         }
-    }
+
+        private void frmMain_Load(object sender, EventArgs e)
+        {
+            initDataGrid();
+        }
+
+	    private void initDataGrid()
+	    {
+	        try
+	        {
+                /*
+                XmlReader xmlFile;
+	            xmlFile = XmlReader.Create("accounts.xml", new XmlReaderSettings());
+	            DataSet ds = new DataSet();
+	            ds.ReadXml(xmlFile);
+	            dataGridView.DataSource = ds.Tables[0];
+                */
+
+	            XmlDataDocument xmldoc = new XmlDataDocument();
+	            XmlNodeList xmlnode;
+	            int i = 0;
+	            string str = null;
+	            FileStream fs = new FileStream("accounts.xml", FileMode.Open, FileAccess.Read);
+	            xmldoc.Load(fs);
+	            xmlnode = xmldoc.GetElementsByTagName("Account");
+	            for (i = 0; i <= xmlnode.Count - 1; i++)
+	            {
+	                xmlnode[i].ChildNodes.Item(0).InnerText.Trim();
+	                
+	                DataGridViewRow row = (DataGridViewRow)dataGridView.Rows[0].Clone();
+	                row.Cells[0].Value = xmlnode[i].ChildNodes.Item(0).InnerText.Trim();
+	                row.Cells[1].Value = xmlnode[i].ChildNodes.Item(1).InnerText.Trim();
+	                row.Cells[2].Value = xmlnode[i].ChildNodes.Item(2).InnerText.Trim();
+	                row.Cells[3].Value = xmlnode[i].ChildNodes.Item(3).InnerText.Trim();
+	                dataGridView.Rows.Add(row);
+                }
+
+                Console.WriteLine("Successfully loaded data from XML to dataGrid");
+	        }
+	        catch (Exception ex)
+	        {
+	            Console.WriteLine(ex.ToString());
+	        }
+        }
+	}
 }

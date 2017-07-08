@@ -131,6 +131,7 @@
             this.Controls.Add(this.btnStartCreateAccs);
             this.Name = "frmMain";
             this.Text = "QuestMiner";
+            this.Load += new System.EventHandler(this.frmMain_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
 
