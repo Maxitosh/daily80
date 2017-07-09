@@ -32,16 +32,16 @@
             this.btnStartCreateAccs = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.Battle_TAG = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Lvl = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.email = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.daily80 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnLoadData = new System.Windows.Forms.Button();
             this.timerDataSaver = new System.Windows.Forms.Timer(this.components);
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.timerDataUpdater = new System.Windows.Forms.Timer(this.components);
             this.btnLogin = new System.Windows.Forms.Button();
             this.btnLogout = new System.Windows.Forms.Button();
-            this.Battle_TAG = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Lvl = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.email = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.daily80 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -83,49 +83,6 @@
             this.dataGridView.Size = new System.Drawing.Size(585, 445);
             this.dataGridView.TabIndex = 2;
             // 
-            // btnLoadData
-            // 
-            this.btnLoadData.Location = new System.Drawing.Point(11, 425);
-            this.btnLoadData.Name = "btnLoadData";
-            this.btnLoadData.Size = new System.Drawing.Size(81, 32);
-            this.btnLoadData.TabIndex = 3;
-            this.btnLoadData.Text = "Load DATA";
-            this.btnLoadData.UseVisualStyleBackColor = true;
-            this.btnLoadData.Click += new System.EventHandler(this.btnLoadData_Click);
-            // 
-            // timerDataSaver
-            // 
-            this.timerDataSaver.Interval = 5000;
-            this.timerDataSaver.Tick += new System.EventHandler(this.timerDataSaver_Tick);
-            // 
-            // openFileDialog
-            // 
-            this.openFileDialog.FileName = "openFileDialog";
-            // 
-            // timerDataUpdater
-            // 
-            this.timerDataUpdater.Tick += new System.EventHandler(this.timerDataUpdater_Tick);
-            // 
-            // btnLogin
-            // 
-            this.btnLogin.Location = new System.Drawing.Point(222, 377);
-            this.btnLogin.Name = "btnLogin";
-            this.btnLogin.Size = new System.Drawing.Size(82, 32);
-            this.btnLogin.TabIndex = 4;
-            this.btnLogin.Text = "Login";
-            this.btnLogin.UseVisualStyleBackColor = true;
-            this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
-            // 
-            // btnLogout
-            // 
-            this.btnLogout.Location = new System.Drawing.Point(222, 425);
-            this.btnLogout.Name = "btnLogout";
-            this.btnLogout.Size = new System.Drawing.Size(82, 32);
-            this.btnLogout.TabIndex = 5;
-            this.btnLogout.Text = "Logout";
-            this.btnLogout.UseVisualStyleBackColor = true;
-            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
-            // 
             // Battle_TAG
             // 
             this.Battle_TAG.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
@@ -151,6 +108,52 @@
             this.daily80.HeaderText = "daily80";
             this.daily80.Name = "daily80";
             this.daily80.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // btnLoadData
+            // 
+            this.btnLoadData.Location = new System.Drawing.Point(11, 425);
+            this.btnLoadData.Name = "btnLoadData";
+            this.btnLoadData.Size = new System.Drawing.Size(81, 32);
+            this.btnLoadData.TabIndex = 3;
+            this.btnLoadData.Text = "Load DATA";
+            this.btnLoadData.UseVisualStyleBackColor = true;
+            this.btnLoadData.Click += new System.EventHandler(this.btnLoadData_Click);
+            // 
+            // timerDataSaver
+            // 
+            this.timerDataSaver.Enabled = true;
+            this.timerDataSaver.Interval = 10000;
+            this.timerDataSaver.Tick += new System.EventHandler(this.timerDataSaver_Tick);
+            // 
+            // openFileDialog
+            // 
+            this.openFileDialog.FileName = "openFileDialog";
+            // 
+            // timerDataUpdater
+            // 
+            this.timerDataUpdater.Enabled = true;
+            this.timerDataUpdater.Interval = 15000;
+            this.timerDataUpdater.Tick += new System.EventHandler(this.timerDataUpdater_Tick);
+            // 
+            // btnLogin
+            // 
+            this.btnLogin.Location = new System.Drawing.Point(222, 377);
+            this.btnLogin.Name = "btnLogin";
+            this.btnLogin.Size = new System.Drawing.Size(82, 32);
+            this.btnLogin.TabIndex = 4;
+            this.btnLogin.Text = "Login";
+            this.btnLogin.UseVisualStyleBackColor = true;
+            this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
+            // 
+            // btnLogout
+            // 
+            this.btnLogout.Location = new System.Drawing.Point(222, 425);
+            this.btnLogout.Name = "btnLogout";
+            this.btnLogout.Size = new System.Drawing.Size(82, 32);
+            this.btnLogout.TabIndex = 5;
+            this.btnLogout.Text = "Logout";
+            this.btnLogout.UseVisualStyleBackColor = true;
+            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
             // 
             // frmMain
             // 

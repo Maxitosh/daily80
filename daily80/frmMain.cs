@@ -30,11 +30,19 @@ namespace daily80
 
         BattleNet btNet = new BattleNet();
 
+        Account account = new Account();
+
         /*
         BOOLEANS
         */
         bool canWriteToXML = true; // it is for good work between load btn and timer saver
 
+        private bool canReadDataGrid = true;
+
+        /*
+         STRINGS
+         */
+         
         ////////////////////////////
 
         public frmMain()
@@ -113,9 +121,12 @@ namespace daily80
                     count++;
             }
             // perform work to this thread
-            canWriteToXML = false;
+
             if (!canWriteToXML && count != 0)
+            {
+                canWriteToXML = false;
                 addToXml();
+            }
             canWriteToXML = true;
             // closing opened file
             fileRead.Close();
@@ -149,7 +160,7 @@ namespace daily80
 
         private void addToXml()
         {
-            Console.WriteLine("Saving data!");
+            Trace.WriteLine("Saving data!");
             try
             {
                 DataSet ds = new DataSet(); // создаем пока что пустой кэш данных
@@ -174,9 +185,10 @@ namespace daily80
                 ds.WriteXml("accounts.xml");
                 Console.WriteLine("XML file was successfully saved.");
             }
-            catch
+            catch (Exception ex)
             {
                 Console.WriteLine("Cant save XML file.");
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -204,9 +216,9 @@ namespace daily80
                 FileStream fs = new FileStream("accounts.xml", FileMode.Open, FileAccess.Read);
                 xmldoc.Load(fs);
                 xmlnode = xmldoc.GetElementsByTagName("Account");
-                for (i = 0; i <= xmlnode.Count - 1; i++)
+                for (i = 0; i < xmlnode.Count - 1; i++)
                 {
-                    xmlnode[i].ChildNodes.Item(0).InnerText.Trim();
+                    //xmlnode[i].ChildNodes.Item(0).InnerText.Trim();
 
                     DataGridViewRow row = (DataGridViewRow)dataGridView.Rows[0].Clone();
                     row.Cells[0].Value = xmlnode[i].ChildNodes.Item(0).InnerText.Trim();
@@ -215,7 +227,7 @@ namespace daily80
                     row.Cells[3].Value = xmlnode[i].ChildNodes.Item(3).InnerText.Trim();
                     dataGridView.Rows.Add(row);
                 }
-
+                fs.Close();
                 Console.WriteLine("Successfully loaded data from XML to dataGrid");
             }
             catch (Exception ex)
@@ -226,24 +238,68 @@ namespace daily80
 
         private void timerDataSaver_Tick(object sender, EventArgs e)
         {
-
+            if (canWriteToXML && canReadDataGrid)
+            {
+                canWriteToXML = false;
+                canReadDataGrid = false;
+                addToXml();
+                canWriteToXML = true;
+                canReadDataGrid = true;
+            }
         }
 
         private void timerDataUpdater_Tick(object sender, EventArgs e)
         {
-
+            Process[] proc = Process.GetProcessesByName("Hearthstone");
+            if (proc.Length != 0)
+            {
+                Console.WriteLine("Hearthstone detected!");
+                if (Reflection.IsInMainMenu() && canReadDataGrid)
+                {
+                    account.BattleTag = Reflection.GetBattleTag().Name + "#" + Reflection.GetBattleTag().Number;
+                    int index = 0;
+                    canReadDataGrid = false;
+                    for (int i = 0; i < dataGridView.RowCount; i++)
+                    {
+                        var formattedValue = dataGridView.Rows[i].Cells[2].FormattedValue;
+                        if (formattedValue != null && formattedValue.Equals(account.Username))
+                        {
+                            index = i;
+                        }
+                    }
+                    canReadDataGrid = true;
+                    dataGridView.Rows[index].Cells[0].Value = account.BattleTag;
+                    if (frmMain.ActiveForm != null)
+                        frmMain.ActiveForm.Text = "Current acc is BattleTag:" + account.BattleTag + " email:" +
+                                                  account.Username;
+                    Console.WriteLine("Updated BattleTag:" + account.BattleTag + " for account " + account.Username);
+                }
+            }
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
             int index = dataGridView.SelectedRows[0].Index;
+
             string email = dataGridView.Rows[index].Cells[2].FormattedValue.ToString();
             string psswrd = "questsmining228";
+
+            account.Username = email;
+            account.Password = psswrd;
+
+            frmMain.ActiveForm.Text = "Current acc is BattleTag:" + account.BattleTag + " email:" + account.Username;
+
             btNet.StartBnetAccount(email, psswrd);
         }
 
         private void btnLogout_Click(object sender, EventArgs e)
         {
+            account.Username = "";
+            account.Password = "";
+            account.BattleTag = "";
+
+            frmMain.ActiveForm.Text = "Idle";
+
             btNet.LogoutBnet();
         }
     }
