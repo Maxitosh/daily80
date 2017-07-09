@@ -32,6 +32,8 @@ namespace daily80
 
         Account account = new Account();
 
+        Log log = new Log();
+
         /*
         BOOLEANS
         */
@@ -85,19 +87,6 @@ namespace daily80
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Console.WriteLine(Reflection.IsInMainMenu());
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-                throw;
-            }
-        }
-
         private void btnLoadData_Click(object sender, EventArgs e)
         {
             openFileDialog.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
@@ -106,7 +95,7 @@ namespace daily80
             // getting selected file
             string filename = openFileDialog.FileName;
 
-            Console.WriteLine("File opened!");
+            log.LogMessage("File opened!", MessageType.Normal);
 
             StreamReader fileRead = new StreamReader(filename);
             // count of uniq accs added to data
@@ -130,7 +119,7 @@ namespace daily80
             canWriteToXML = true;
             // closing opened file
             fileRead.Close();
-            Console.WriteLine("Added " + count + " new accs");
+            log.LogMessage("Added " + count + " new accs", MessageType.Normal);
         }
 
         private bool addToDataGrid(string acc)
@@ -160,7 +149,7 @@ namespace daily80
 
         private void addToXml()
         {
-            Trace.WriteLine("Saving data!");
+            log.LogMessage("Autosaving data!", MessageType.Normal);
             try
             {
                 DataSet ds = new DataSet(); // создаем пока что пустой кэш данных
@@ -183,12 +172,12 @@ namespace daily80
                     ds.Tables["Account"].Rows.Add(row); //добавление всей этой строки в таблицу ds.
                 }
                 ds.WriteXml("accounts.xml");
-                Console.WriteLine("XML file was successfully saved.");
+                log.LogMessage("XML file was successfully saved.", MessageType.Normal);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Cant save XML file.");
-                Console.WriteLine(ex.Message);
+                log.LogMessage("Cant save XML file.", MessageType.Error);
+                log.LogMessage(ex.Message, MessageType.Error);
             }
         }
 
@@ -228,11 +217,11 @@ namespace daily80
                     dataGridView.Rows.Add(row);
                 }
                 fs.Close();
-                Console.WriteLine("Successfully loaded data from XML to dataGrid");
+                log.LogMessage("Successfully loaded data from XML to dataGrid", MessageType.Normal);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                log.LogMessage(ex.ToString(), MessageType.Error);
             }
         }
 
@@ -253,7 +242,7 @@ namespace daily80
             Process[] proc = Process.GetProcessesByName("Hearthstone");
             if (proc.Length != 0)
             {
-                Console.WriteLine("Hearthstone detected!");
+                log.LogMessage("Hearthstone detected!", MessageType.Normal);
                 if (Reflection.IsInMainMenu() && canReadDataGrid)
                 {
                     account.BattleTag = Reflection.GetBattleTag().Name + "#" + Reflection.GetBattleTag().Number;
@@ -272,7 +261,7 @@ namespace daily80
                     if (frmMain.ActiveForm != null)
                         frmMain.ActiveForm.Text = "Current acc is BattleTag:" + account.BattleTag + " email:" +
                                                   account.Username;
-                    Console.WriteLine("Updated BattleTag:" + account.BattleTag + " for account " + account.Username);
+                    log.LogMessage("Updated BattleTag:" + account.BattleTag + " for account " + account.Username, MessageType.Normal);
                 }
             }
         }

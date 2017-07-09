@@ -30,7 +30,6 @@
 		{
             this.components = new System.ComponentModel.Container();
             this.btnStartCreateAccs = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.Battle_TAG = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Lvl = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -54,16 +53,6 @@
             this.btnStartCreateAccs.Text = "Start creating accounts";
             this.btnStartCreateAccs.UseVisualStyleBackColor = true;
             this.btnStartCreateAccs.Click += new System.EventHandler(this.btnStartCreateAccs_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(170, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // dataGridView
             // 
@@ -137,7 +126,7 @@
             // 
             // btnLogin
             // 
-            this.btnLogin.Location = new System.Drawing.Point(222, 377);
+            this.btnLogin.Location = new System.Drawing.Point(222, 387);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(82, 32);
             this.btnLogin.TabIndex = 4;
@@ -164,7 +153,6 @@
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.btnLoadData);
             this.Controls.Add(this.dataGridView);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.btnStartCreateAccs);
             this.Name = "frmMain";
             this.Text = "QuestMiner";
@@ -177,7 +165,6 @@
         #endregion
 
         private System.Windows.Forms.Button btnStartCreateAccs;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.Button btnLoadData;
         private System.Windows.Forms.Timer timerDataSaver;
