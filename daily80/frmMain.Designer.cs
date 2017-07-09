@@ -31,16 +31,18 @@
             this.components = new System.ComponentModel.Container();
             this.btnStartCreateAccs = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.Battle_TAG = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Lvl = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.email = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.daily80 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnLoadData = new System.Windows.Forms.Button();
             this.timerDataSaver = new System.Windows.Forms.Timer(this.components);
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.timerDataUpdater = new System.Windows.Forms.Timer(this.components);
             this.btnLogin = new System.Windows.Forms.Button();
             this.btnLogout = new System.Windows.Forms.Button();
+            this.Battle_TAG = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Lvl = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.email = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.daily80 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnStartBot = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -71,32 +73,6 @@
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.Size = new System.Drawing.Size(585, 445);
             this.dataGridView.TabIndex = 2;
-            // 
-            // Battle_TAG
-            // 
-            this.Battle_TAG.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Battle_TAG.HeaderText = "Battle_TAG";
-            this.Battle_TAG.Name = "Battle_TAG";
-            this.Battle_TAG.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // Lvl
-            // 
-            this.Lvl.HeaderText = "Lvl";
-            this.Lvl.Name = "Lvl";
-            this.Lvl.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // email
-            // 
-            this.email.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.email.HeaderText = "Email";
-            this.email.Name = "email";
-            this.email.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // daily80
-            // 
-            this.daily80.HeaderText = "daily80";
-            this.daily80.Name = "daily80";
-            this.daily80.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             // 
             // btnLoadData
             // 
@@ -144,11 +120,62 @@
             this.btnLogout.UseVisualStyleBackColor = true;
             this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
             // 
+            // Battle_TAG
+            // 
+            this.Battle_TAG.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Battle_TAG.HeaderText = "Battle_TAG";
+            this.Battle_TAG.Name = "Battle_TAG";
+            this.Battle_TAG.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Battle_TAG.Width = 150;
+            // 
+            // Lvl
+            // 
+            this.Lvl.HeaderText = "Lvl";
+            this.Lvl.Name = "Lvl";
+            this.Lvl.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Lvl.Width = 20;
+            // 
+            // email
+            // 
+            this.email.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.email.HeaderText = "Email";
+            this.email.Name = "email";
+            this.email.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // daily80
+            // 
+            this.daily80.HeaderText = "daily80";
+            this.daily80.Name = "daily80";
+            this.daily80.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // btnStartBot
+            // 
+            this.btnStartBot.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btnStartBot.Location = new System.Drawing.Point(12, 221);
+            this.btnStartBot.Name = "btnStartBot";
+            this.btnStartBot.Size = new System.Drawing.Size(115, 52);
+            this.btnStartBot.TabIndex = 6;
+            this.btnStartBot.Text = "Start Bot";
+            this.btnStartBot.UseVisualStyleBackColor = true;
+            this.btnStartBot.Click += new System.EventHandler(this.btnStartBot_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(222, 108);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 7;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(907, 469);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnStartBot);
             this.Controls.Add(this.btnLogout);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.btnLoadData);
@@ -176,6 +203,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Lvl;
         private System.Windows.Forms.DataGridViewTextBoxColumn email;
         private System.Windows.Forms.DataGridViewTextBoxColumn daily80;
+        private System.Windows.Forms.Button btnStartBot;
+        private System.Windows.Forms.Button button1;
     }
 }
 

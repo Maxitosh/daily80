@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
@@ -51,7 +52,6 @@ namespace daily80
         {
             InitializeComponent();
             AllocConsole();
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
 
             //Console.WriteLine(Reflection.GetBattleTag().Name + "#" + Reflection.GetBattleTag().Number);
         }
@@ -171,7 +171,7 @@ namespace daily80
                     row["daily80"] = r.Cells[3].Value;
                     ds.Tables["Account"].Rows.Add(row); //добавление всей этой строки в таблицу ds.
                 }
-                ds.WriteXml("accounts.xml");
+                ds.WriteXml(DateTime.Now.Date.ToShortDateString() + ".xml");
                 log.LogMessage("XML file was successfully saved.", MessageType.Normal);
             }
             catch (Exception ex)
@@ -190,34 +190,32 @@ namespace daily80
         {
             try
             {
-                /*
-                XmlReader xmlFile;
-	            xmlFile = XmlReader.Create("accounts.xml", new XmlReaderSettings());
-	            DataSet ds = new DataSet();
-	            ds.ReadXml(xmlFile);
-	            dataGridView.DataSource = ds.Tables[0];
-                */
-
-                XmlDataDocument xmldoc = new XmlDataDocument();
-                XmlNodeList xmlnode;
-                int i = 0;
-                string str = null;
-                FileStream fs = new FileStream("accounts.xml", FileMode.Open, FileAccess.Read);
-                xmldoc.Load(fs);
-                xmlnode = xmldoc.GetElementsByTagName("Account");
-                for (i = 0; i < xmlnode.Count - 1; i++)
+                if (File.Exists(DateTime.Now.Date.ToShortDateString() + ".xml"))
                 {
-                    //xmlnode[i].ChildNodes.Item(0).InnerText.Trim();
+                    XmlDataDocument xmldoc = new XmlDataDocument();
+                    XmlNodeList xmlnode;
+                    FileStream fs = new FileStream(DateTime.Now.Date.ToShortDateString() + ".xml", FileMode.Open,
+                        FileAccess.Read);
+                    xmldoc.Load(fs);
+                    xmlnode = xmldoc.GetElementsByTagName("Account");
+                    for (int i = 0; i < xmlnode.Count - 1; i++)
+                    {
+                        //xmlnode[i].ChildNodes.Item(0).InnerText.Trim();
 
-                    DataGridViewRow row = (DataGridViewRow)dataGridView.Rows[0].Clone();
-                    row.Cells[0].Value = xmlnode[i].ChildNodes.Item(0).InnerText.Trim();
-                    row.Cells[1].Value = xmlnode[i].ChildNodes.Item(1).InnerText.Trim();
-                    row.Cells[2].Value = xmlnode[i].ChildNodes.Item(2).InnerText.Trim();
-                    row.Cells[3].Value = xmlnode[i].ChildNodes.Item(3).InnerText.Trim();
-                    dataGridView.Rows.Add(row);
+                        DataGridViewRow row = (DataGridViewRow) dataGridView.Rows[0].Clone();
+                        row.Cells[0].Value = xmlnode[i].ChildNodes.Item(0).InnerText.Trim();
+                        row.Cells[1].Value = xmlnode[i].ChildNodes.Item(1).InnerText.Trim();
+                        row.Cells[2].Value = xmlnode[i].ChildNodes.Item(2).InnerText.Trim();
+                        row.Cells[3].Value = xmlnode[i].ChildNodes.Item(3).InnerText.Trim();
+                        dataGridView.Rows.Add(row);
+                    }
+                    fs.Close();
+                    log.LogMessage("Successfully loaded data from XML: " + DateTime.Now.Date.ToShortDateString() + ".xml" + " to dataGrid", MessageType.Normal);
                 }
-                fs.Close();
-                log.LogMessage("Successfully loaded data from XML to dataGrid", MessageType.Normal);
+                else
+                {
+                    log.LogMessage("File " + DateTime.Now.Date.ToShortDateString() + ".xml" + " not created!", MessageType.Warning);
+                }
             }
             catch (Exception ex)
             {
@@ -238,6 +236,11 @@ namespace daily80
         }
 
         private void timerDataUpdater_Tick(object sender, EventArgs e)
+        {
+            updateData();
+        }
+
+        private void updateData()
         {
             Process[] proc = Process.GetProcessesByName("Hearthstone");
             if (proc.Length != 0)
@@ -290,6 +293,126 @@ namespace daily80
             frmMain.ActiveForm.Text = "Idle";
 
             btNet.LogoutBnet();
+        }
+
+        private void btnStartBot_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    //MAIN LOGIC
+                    log.LogMessage("Bot started!", MessageType.Warning);
+                    timerDataSaver.Enabled = false;
+                    timerDataUpdater.Enabled = false;
+
+                    //Logout from Bnet if it needs to do
+                    btNet.LogoutBnet();
+
+                    Thread.Sleep(5000);
+
+                    //Enter to Bnet
+                    string email = dataGridView.Rows[i].Cells[2].FormattedValue.ToString();
+                    string psswrd = "questsmining228";
+
+                    account.Username = email;
+                    account.Password = psswrd;
+                    account.BattleTag = "";
+
+                    //frmMain.ActiveForm.Text = "Current acc is BattleTag:" + account.BattleTag + " email:" + account.Username;
+                    log.LogMessage("Current acc is BattleTag:" + account.BattleTag + " email:" + account.Username, MessageType.Normal);
+
+                    btNet.StartBnetAccount(email, psswrd);
+
+                    //Waiting for Bnet loading
+                    Process[] procBtnet = Process.GetProcessesByName("Battle.net");
+                    while (!procBtnet[0].MainWindowTitle.Equals("Blizzard App"))
+                    {
+                        procBtnet = Process.GetProcessesByName("Battle.net");
+                        Thread.Sleep(1000);
+                    }
+                    log.LogMessage("Blizzard App succesfully loaded!", MessageType.Normal);
+                    Thread.Sleep(5000);
+
+                    //Enter game
+                    Process ahk = new Process { StartInfo = new ProcessStartInfo(AppDomain.CurrentDomain.BaseDirectory + @"\LaunchHS.ahk") };
+                    ahk.Start();
+
+                    //Enter quests panel
+
+                    Thread.Sleep(20000);
+
+                    ahk = new Process { StartInfo = new ProcessStartInfo(AppDomain.CurrentDomain.BaseDirectory + @"\EnterQuestsHS.ahk") };
+                    ahk.Start();
+
+                    Thread.Sleep(3000);
+                    try
+                    {
+
+
+                        while (!Reflection.IsInMainMenu())
+                        {
+                            ahk = new Process
+                            {
+                                StartInfo = new ProcessStartInfo(AppDomain.CurrentDomain.BaseDirectory +
+                                                                 @"\EnterQuestsHS.ahk")
+                            };
+                            ahk.Start();
+
+                            Thread.Sleep(6000);
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        log.LogMessage(exception.Message, MessageType.Error);
+                    }
+
+                    updateData();
+                    addToXml();
+
+                    try
+                    {
+                        while (!Reflection.GetShownUiWindowId().ToString().Equals("4"))
+                        {
+                            ahk = new Process
+                            {
+                                StartInfo = new ProcessStartInfo(AppDomain.CurrentDomain.BaseDirectory +
+                                                                 @"\EnterQuestsHS.ahk")
+                            };
+                            ahk.Start();
+
+                            Thread.Sleep(6000);
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        log.LogMessage(exception.Message, MessageType.Error);
+                    }
+
+                    //Check daily80
+
+                    //Update daily info on acc
+
+                    //Close game
+                    Process[] procHS = Process.GetProcessesByName("Hearthstone");
+                    procHS[0].Kill();
+
+                    Thread.Sleep(6000);
+
+                    //logout from Bnet
+                    btNet.LogoutBnet();
+                    Thread.Sleep(3000);
+                }
+            }
+            catch (Exception exception)
+            {
+                log.LogMessage(exception.Message, MessageType.Error);
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            log.LogMessage(Reflection.GetShownUiWindowId().ToString(), MessageType.Normal);
         }
     }
 }
