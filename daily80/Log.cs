@@ -25,6 +25,11 @@ namespace daily80
                     Console.WriteLine("[" + DateTime.Now.Hour + ":" + DateTime.Now.Minute + ":" + DateTime.Now.Second + "] " + msg);
                     Console.ResetColor();
                     break;
+                case MessageType.Success:
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("[" + DateTime.Now.Hour + ":" + DateTime.Now.Minute + ":" + DateTime.Now.Second + "] " + msg);
+                    Console.ResetColor();
+                    break;
             }
         }
     }

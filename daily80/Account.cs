@@ -13,5 +13,7 @@ namespace daily80
         public string Password { get; set; }
 
         public string BattleTag { get; set; }
+
+        public bool Daily80 { get; set; }
     }
 }

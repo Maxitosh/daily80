@@ -56,6 +56,18 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Emgu.CV.DebuggerVisualizers.VS2017">
+      <HintPath>..\..\..\Emgu_CV\bin\Emgu.CV.DebuggerVisualizers.VS2017.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.CV.UI">
+      <HintPath>..\..\..\Emgu_CV\bin\Emgu.CV.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.CV.UI.GL">
+      <HintPath>..\..\..\Emgu_CV\bin\Emgu.CV.UI.GL.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.CV.World">
+      <HintPath>..\..\..\Emgu_CV\bin\Emgu.CV.World.dll</HintPath>
+    </Reference>
     <Reference Include="HearthMirror, Version=8.2.0.19506, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\HearthMirror.dll</HintPath>
@@ -75,6 +87,7 @@
   <ItemGroup>
     <Compile Include="Account.cs" />
     <Compile Include="BattleNet.cs" />
+    <Compile Include="DrawMatches.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>

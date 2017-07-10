@@ -8,6 +8,6 @@ namespace daily80
 {
     public enum MessageType
     {
-        Normal, Error, Warning
+        Normal, Error, Warning, Success
     }
 }
